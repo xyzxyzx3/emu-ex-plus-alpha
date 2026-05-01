@@ -183,10 +183,9 @@ void EmuApp::showLastViewFromSystem(ViewAttachParams attach, const Input::Event 
 	}
 }
 
-void EmuApp::showExitAlert(ViewAttachParams attach, const Input::Event &e)
+void EmuApp::showExitAlert(ViewAttachParams, const Input::Event &)
 {
-	viewController().pushAndShowModal(std::make_unique<ExitConfirmAlertView>(
-		attach, system().hasContent()), e, false);
+    showEmulation();
 }
 
 static const char *parseCommandArgs(CommandArgs arg)
