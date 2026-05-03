@@ -40,20 +40,20 @@ uint_least32_t GbcSystem::makeOutputColor(uint_least32_t rgb888) const
 
 void GbcSystem::applyGBPalette()
 {
-	size_t idx = optionGBPal;
-	assume(idx < gbPalettes().size());
-	bool useBuiltin = optionUseBuiltinGBPalette && gameBuiltinPalette;
-	if(useBuiltin)
-		log.info("using built-in game palette");
-	else
-		log.info("using palette index:{}", idx);
-	const GBPalette &pal = useBuiltin ? *gameBuiltinPalette : gbPalettes()[idx];
-	for(auto i: iotaCount(4))
-		gbEmu.setDmgPaletteColor(0, i, makeOutputColor(pal.bg[i]));
-	for(auto i: iotaCount(4))
-		gbEmu.setDmgPaletteColor(1, i, makeOutputColor(pal.sp1[i]));
-	for(auto i: iotaCount(4))
-		gbEmu.setDmgPaletteColor(2, i, makeOutputColor(pal.sp2[i]));
+    GBPalette pal;
+
+    pal.bg  = { 0xE0F8D0, 0x88C070, 0x346856, 0x081820 };
+    pal.sp1 = pal.bg;
+    pal.sp2 = pal.bg;
+
+    for(auto i: iotaCount(4))
+        gbEmu.setDmgPaletteColor(0, i, makeOutputColor(pal.bg[i]));
+
+    for(auto i: iotaCount(4))
+        gbEmu.setDmgPaletteColor(1, i, makeOutputColor(pal.sp1[i]));
+
+    for(auto i: iotaCount(4))
+        gbEmu.setDmgPaletteColor(2, i, makeOutputColor(pal.sp2[i]));
 }
 
 void GbcSystem::reset(EmuApp& app, ResetMode)
