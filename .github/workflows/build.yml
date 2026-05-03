@@ -1,4 +1,4 @@
-name: EX Emulators - GBA Only
+name: EX Emulators
 
 on: [push, pull_request]
 
@@ -68,10 +68,13 @@ jobs:
         path: ./
         key: ${{ github.sha }}-base
 
-  build_gba:
-    name: Build GBA.emu
+  build_images:
+    name: Build images
     needs: [build]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: ["2600.emu", "C64.emu", "GBA.emu", "GBC.emu", "Lynx.emu", "MD.emu", "MSX.emu", "NEO.emu", "NES.emu", "NGP.emu", "PCE.emu", "Snes9x", "Snes9x-1.43", "Swan.emu", "Saturn.emu"]
     steps:
     - name: Install build dependencies
       run: |
@@ -96,21 +99,106 @@ jobs:
         cat "$GITHUB_ENV_FILE" >> $GITHUB_ENV
     - name: Create EX-Emulators directory
       run: mkdir EX-Emulators
+    - name: Build 2600.emu
+      if: ${{ matrix.image == '2600.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/2600Emu-release.apk "../EX-Emulators/2600Emu-${COMMIT_PREFIX}.apk"
+    - name: Build C64.emu
+      if: ${{ matrix.image == 'C64.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/C64Emu-release.apk "../EX-Emulators/C64Emu-${COMMIT_PREFIX}.apk"
     - name: Build GBA.emu
-      working-directory: GBA.emu
+      if: ${{ matrix.image == 'GBA.emu' }}
+      working-directory: ${{ matrix.image }}
       run: |
         make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
         cp build/android/build/outputs/apk/release/GbaEmu-release.apk "../EX-Emulators/GbaEmu-${COMMIT_PREFIX}.apk"
-    - name: Upload GBA artifact
+    - name: Build GBC.emu
+      if: ${{ matrix.image == 'GBC.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/GbcEmu-release.apk "../EX-Emulators/GbcEmu-${COMMIT_PREFIX}.apk"
+    - name: Build Lynx.emu
+      if: ${{ matrix.image == 'Lynx.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/LynxEmu-release.apk "../EX-Emulators/LynxEmu-${COMMIT_PREFIX}.apk"
+    - name: Build MD.emu
+      if: ${{ matrix.image == 'MD.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/MdEmu-release.apk "../EX-Emulators/MdEmu-${COMMIT_PREFIX}.apk"
+    - name: Build MSX.emu
+      if: ${{ matrix.image == 'MSX.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/MsxEmu-release.apk "../EX-Emulators/MsxEmu-${COMMIT_PREFIX}.apk"
+    - name: Build NEO.emu
+      if: ${{ matrix.image == 'NEO.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/NeoEmu-release.apk "../EX-Emulators/NeoEmu-${COMMIT_PREFIX}.apk"
+    - name: Build NES.emu
+      if: ${{ matrix.image == 'NES.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/NesEmu-release.apk "../EX-Emulators/NesEmu-${COMMIT_PREFIX}.apk"
+    - name: Build NGP.emu
+      if: ${{ matrix.image == 'NGP.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/NgpEmu-release.apk "../EX-Emulators/NgpEmu-${COMMIT_PREFIX}.apk"
+    - name: Build PCE.emu
+      if: ${{ matrix.image == 'PCE.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/PceEmu-release.apk "../EX-Emulators/PceEmu-${COMMIT_PREFIX}.apk"
+    - name: Build Snes9x
+      if: ${{ matrix.image == 'Snes9x' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/Snes9xEXPlus-release.apk "../EX-Emulators/Snes9xEXPlus-${COMMIT_PREFIX}.apk"
+    - name: Build Snes9x-1.43-9
+      if: ${{ matrix.image == 'Snes9x-1.43' }}
+      working-directory: Snes9x/1.43
+      run: |
+        make -f android.mk android-apk V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/Snes9xEX-release.apk "../../EX-Emulators/Snes9xEX-${COMMIT_PREFIX}.apk"
+    - name: Build Swan.emu
+      if: ${{ matrix.image == 'Swan.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/SwanEmu-release.apk "../EX-Emulators/SwanEmu-${COMMIT_PREFIX}.apk"
+    - name: Build Saturn.emu
+      if: ${{ matrix.image == 'Saturn.emu' }}
+      working-directory: ${{ matrix.image }}
+      run: |
+        make -f android.mk android-apk CONFIG=Release V=1 -j`nproc`
+        cp build/android/build/outputs/apk/release/SaturnEmu-release.apk "../EX-Emulators/SaturnEmu-${COMMIT_PREFIX}.apk"
+    - name: Upload EX-Emulators artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: GBA.emu
+        name: ${{ matrix.image }}
         path: EX-Emulators/
 
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: [build_gba]
+    needs: [build, build_images]
     if: github.ref == 'refs/heads/master'
     steps:
     - name: Checkout emu-ex-plus-alpha repo
@@ -130,17 +218,21 @@ jobs:
         for artifact in *.apk
         do
           file_name="${artifact%.apk}"
+          echo "-> Creating ${file_name//-${COMMIT_PREFIX}/}.zip"
           zip "../dist/${file_name//-${COMMIT_PREFIX}/}.zip" "${file_name}.apk"
         done
+        zip -r "../dist/EX-Emulators.zip" *.apk
     - name: Update Git Tag
       run: |
         git tag -f Pre-release
         git push -f origin Pre-release
     - name: Create Release
-      uses: ncipollo/release-action@v1
+      # v1.16.0
+      uses: ncipollo/release-action@440c8c1cb0ed28b9f43e4d1d670870f059653174
       with:
         prerelease: true
         allowUpdates: true
         removeArtifacts: true
+        replacesArtifacts: false
         tag: Pre-release
         artifacts: "dist/*.zip"
